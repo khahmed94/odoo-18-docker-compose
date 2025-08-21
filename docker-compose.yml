@@ -2,7 +2,7 @@ version: '2'
 
 services:
   db:
-    image: postgres:15
+    image: postgres:17
     user: root
     environment:
       - POSTGRES_USER=odoo
@@ -33,6 +33,7 @@ services:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
       # - ./entrypoint.sh:/entrypoint.sh
+      - ./enterprise:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: always
