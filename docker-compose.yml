@@ -11,9 +11,7 @@ services:
     restart: always
     volumes:
       - ./postgresql:/var/lib/postgresql/data
-    networks:
-      custom_net:
-        ipv4_address: 172.20.0.10
+    networks: [default]   # stays private
 
   odoo18:
     image: odoo:18
@@ -38,13 +36,19 @@ services:
       - ./etc:/etc/odoo
     restart: always
     networks:
-      custom_net:
-        ipv4_address: 172.20.0.11
+      - default      # auto private net
+      - edge         # shared proxy net (external)
+    # no ports if using a reverse proxy
+
+#networks:
+ # custom_net:
+  #  driver: bridge
+   # ipam:
+    #  config:
+     #   - subnet: 172.20.0.0/24
+      #    gateway: 172.20.0.1
+
 
 networks:
-  custom_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+  edge:
+    external: true        # docker network create edge
