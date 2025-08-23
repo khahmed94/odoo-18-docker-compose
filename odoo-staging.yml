@@ -1,0 +1,61 @@
+# docker-compose.staging.yml
+services:
+  db:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo18@2024
+      - POSTGRES_DB=postgres
+    restart: unless-stopped
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    networks: [default]   # stays private
+
+  odoo18:
+    image: odoo:18
+    depends_on:
+      - db
+      - mailhog
+    # If you're using a reverse proxy on `edge`, you can drop these ports and proxy to 8069/8072 instead.
+    ports:
+      - "10018:8069"   # Odoo web
+      - "20018:8072"   # longpolling/live chat
+    tty: true
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo18@2024
+      # Optional: tell Odoo it's behind a proxy if you use NPM/Traefik
+      # - PROXY_MODE=true
+    volumes:
+      - ./enterprise:/mnt/enterprise
+      - ./addons:/mnt/extra-addons
+      - ./etc:/etc/odoo     # put smtp settings for staging here (see notes)
+    restart: unless-stopped
+    networks:
+      - default      # private with db & mailhog
+      - edge         # shared proxy net (external)
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    restart: unless-stopped
+    # Web UI on 8025, SMTP on 1025
+    ports:
+      - "1025:1025"   # SMTP catch-all
+      - "8025:8025"   # MailHog UI
+    networks:
+      - default
+      # If you want to expose the UI via your reverse proxy instead of a host port:
+      # - edge
+    # For Traefik users, you can proxy MailHog UI with labels (optional):
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.docker.network=edge"
+    #   - "traefik.http.routers.mailhog.rule=Host(`mailhog.yourdomain.com`)"
+    #   - "traefik.http.routers.mailhog.entrypoints=websecure"
+    #   - "traefik.http.routers.mailhog.tls=true"
+    #   - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+
+networks:
+  edge:
+    external: true   # docker network create edge
