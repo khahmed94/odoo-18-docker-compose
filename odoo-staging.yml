@@ -28,6 +28,12 @@ services:
       # Optional: tell Odoo it's behind a proxy if you use NPM/Traefik
       # - PROXY_MODE=true
     volumes:
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+      # - ./entrypoint.sh:/entrypoint.sh
+      - ./enterprise:/mnt/enterprise
+      - ./addons:/mnt/extra-addons
+      - ./etc:/etc/odoo
       - ./enterprise:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo     # put smtp settings for staging here (see notes)
