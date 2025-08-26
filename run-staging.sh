@@ -28,7 +28,7 @@ else
 fi
 
 # Set ports in docker-compose.yml
-# Update docker compose configuration
+# Update docker-compose configuration
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # macOS sed syntax
   sed -i '' 's/10055/'$PORT'/g' $DESTINATION/odoo-staging.yml
@@ -44,6 +44,6 @@ find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
 # Run Odoo
-docker compose -f $DESTINATION/odoo-staging.yml up -d
+docker-compose -f $DESTINATION/odoo-staging.yml up -d
 
 echo "Odoo started at http://localhost:$PORT | Master Password: mostafa@1234 | Live chat port: $CHAT"
