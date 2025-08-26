@@ -31,8 +31,6 @@ services:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
       # - ./entrypoint.sh:/entrypoint.sh
-      - ./enterprise:/mnt/enterprise
-      - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
       - ./enterprise:/mnt/enterprise
       - ./addons:/mnt/extra-addons
