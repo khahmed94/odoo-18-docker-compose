@@ -18,8 +18,8 @@ services:
       - mailhog
     # If you're using a reverse proxy on `edge`, you can drop these ports and proxy to 8069/8072 instead.
     ports:
-      - "10018:8069"   # Odoo web
-      - "20018:8072"   # longpolling/live chat
+      - "10055:8069"   # Odoo web
+      - "20055:8072"   # longpolling/live chat
     tty: true
     environment:
       - HOST=db
