@@ -31,12 +31,12 @@ fi
 # Update docker-compose configuration
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # macOS sed syntax
-  sed -i '' 's/10018/'$PORT'/g' $DESTINATION/odoo-staging.yml
-  sed -i '' 's/20018/'$CHAT'/g' $DESTINATION/odoo-staging.yml
+  sed -i '' 's/10055/'$PORT'/g' $DESTINATION/odoo-staging.yml
+  sed -i '' 's/20055/'$CHAT'/g' $DESTINATION/odoo-staging.yml
 else
   # Linux sed syntax
-  sed -i 's/10018/'$PORT'/g' $DESTINATION/odoo-staging.yml
-  sed -i 's/20018/'$CHAT'/g' $DESTINATION/odoo-staging.yml
+  sed -i 's/10055/'$PORT'/g' $DESTINATION/odoo-staging.yml
+  sed -i 's/20055/'$CHAT'/g' $DESTINATION/odoo-staging.yml
 fi
 
 # Set file and directory permissions after installation
