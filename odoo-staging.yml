@@ -1,46 +1,48 @@
-# docker-compose.staging.yml
+#odoo-staging.yml
+version: '2'
+
 services:
   db:
     image: postgres:17
+    user: root
     environment:
       - POSTGRES_USER=odoo
-      - POSTGRES_PASSWORD=odoo18@2024
+      - POSTGRES_PASSWORD=2o0d2o4o18@2024
       - POSTGRES_DB=postgres
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./postgresql:/var/lib/postgresql/data
     networks: [default]   # stays private
 
   odoo18:
     image: odoo:18
+    user: root
     depends_on:
       - db
       - mailhog
-    # If you're using a reverse proxy on `edge`, you can drop these ports and proxy to 8069/8072 instead.
     ports:
-      - "10055:8069"   # Odoo web
-      - "20055:8072"   # longpolling/live chat
+      - "10055:8069"   # main Odoo
+      - "20055:8072"   # live chat
     tty: true
+    command: --
     environment:
       - HOST=db
       - USER=odoo
-      - PASSWORD=odoo18@2024
-      # Optional: tell Odoo it's behind a proxy if you use NPM/Traefik
-      # - PROXY_MODE=true
+      - PASSWORD=2o0d2o4o18@2024
     volumes:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
-      # - ./entrypoint.sh:/entrypoint.sh
-      - ./etc:/etc/odoo
-      - ./enterprise:/mnt/enterprise
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
-      - ./etc:/etc/odoo     # put smtp settings for staging here (see notes)
-    restart: unless-stopped
+      - ./etc:/etc/odoo
+    restart: always
     networks:
-      - default      # private with db & mailhog
+      - default      # auto private net
       - edge         # shared proxy net (external)
+    # no ports if using a reverse proxy
 
-  mailhog:
+mailhog:
     image: mailhog/mailhog:v1.0.1
     restart: unless-stopped
     # Web UI on 8025, SMTP on 1025
@@ -60,6 +62,18 @@ services:
     #   - "traefik.http.routers.mailhog.tls=true"
     #   - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
 
+
+
+#networks:
+ # custom_net:
+  #  driver: bridge
+   # ipam:
+    #  config:
+     #   - subnet: 172.20.0.0/24
+      #    gateway: 172.20.0.1
+
+
 networks:
   edge:
-    external: true   # docker network create edge
+    external: true        # docker network create edge
+
