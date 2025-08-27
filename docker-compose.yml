@@ -30,7 +30,7 @@ services:
     volumes:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
-      # - ./entrypoint.sh:/entrypoint.sh
+      - ./entrypoint.sh:/entrypoint.sh
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
