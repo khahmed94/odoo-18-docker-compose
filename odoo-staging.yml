@@ -1,5 +1,6 @@
 #odoo-staging.yml
-#version: '2.2'
+
+version: '2'
 
 services:
   db:
@@ -12,59 +13,51 @@ services:
     restart: always
     volumes:
       - ./postgresql:/var/lib/postgresql/data
-    networks: [default]   # stays private
+    networks: [default]
 
   odoo18:
     image: odoo:18
     user: root
     depends_on:
       - db
-      - mailhog
+      - mailhog # Add a dependency on the new MailHog service
     ports:
-      - "10055:8069"   # main Odoo
-      - "20055:8072"   # live chat
+      - "10018:8069" # main Odoo
+      - "20018:8072" # live chat
     tty: true
     command: --
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=2o0d2o4o18@2024
+      # Configure Odoo to use MailHog for email sending
+      - ODOO_SMTP_SERVER=mailhog # Hostname corresponds to the service name
+      - ODOO_SMTP_PORT=1025 # MailHog's default SMTP port
+      - ODOO_SMTP_ENCRYPTION=none # No encryption needed for local testing
     volumes:
-      # - /etc/timezone:/etc/timezone:ro
-      # - /etc/localtime:/etc/localtime:ro
-      #- ./entrypoint.sh:/entrypoint.sh
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: always
     networks:
-      - default      # auto private net
-      - edge         # shared proxy net (external)
-    # no ports if using a reverse proxy
+      - default
 
-mailhog:
-    image: mailhog/mailhog:v1.0.1
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    logging:
+      driver: 'none' # Prevents log spam from MailHog
     restart: unless-stopped
     # Web UI on 8025, SMTP on 1025
     ports:
-      - "1025:1025"   # SMTP catch-all
-      - "8025:8025"   # MailHog UI
+      - "1025:1025" # SMTP server for Odoo
+      - "8025:8025" # Web interface to view emails
     networks:
       - default
-      # If you want to expose the UI via your reverse proxy instead of a host port:
-      # - edge
-    # For Traefik users, you can proxy MailHog UI with labels (optional):
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.docker.network=edge"
-    #   - "traefik.http.routers.mailhog.rule=Host(`mailhog.yourdomain.com`)"
-    #   - "traefik.http.routers.mailhog.entrypoints=websecure"
-    #   - "traefik.http.routers.mailhog.tls=true"
-    #   - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
-
-
 
 networks:
+  default:
+    driver: bridge
   custom_net:
     driver: bridge
     ipam:
