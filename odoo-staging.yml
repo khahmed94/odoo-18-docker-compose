@@ -1,20 +1,7 @@
-#odoo-staging.yml
-
-   version: '3.8'
+---  # odoo-staging.yml
+version: "3.8"
 
 services:
-  mailhog:
-    image: mailhog/mailhog:latest
-    # container_name: mailhog            # ← remove to avoid name clashes
-    logging:
-      driver: 'none'
-    restart: unless-stopped
-    ports:
-      # No SMTP port on host; expose only the UI (and bind it to localhost for safety)
-      - "127.0.0.1:8025:8025"
-    networks:
-      - default
-
   db:
     image: postgres:17
     user: root
@@ -28,6 +15,15 @@ services:
     networks:
       - default
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    # Only expose the UI locally; don't publish SMTP to host (avoids 1025 conflict)
+    ports:
+      - "127.0.0.1:8025:8025"
+    networks:
+      - default
+
   odoo18:
     image: odoo:18
     user: root
@@ -35,15 +31,15 @@ services:
       - db
       - mailhog
     ports:
-      - "10018:8069"   # main Odoo
+      - "10018:8069"   # Odoo web
       - "20018:8072"   # live chat
     tty: true
+    # NOTE: do NOT set "command: --" (breaks entrypoint)
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=2o0d2o4o18@2024
-      # Note: these ODOO_SMTP_* envs are NOT read by the official odoo image.
-      # Configure SMTP in /etc/odoo/odoo.conf or via Odoo UI → Settings → Outgoing Mail Servers.
+      # The official image ignores ODOO_SMTP_* envs; set SMTP in /etc/odoo/odoo.conf or UI
     volumes:
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
@@ -55,20 +51,3 @@ services:
 networks:
   default:
     driver: bridge
-
-
-
-#networks:
-  #default:
-    #driver: bridge
-  #custom_net:
-    #driver: bridge
-    #ipam:
-     # config:
-       # - subnet: 172.20.0.0/24
-        #  gateway: 172.20.0.1
-
-
-#networks:
-  #edge:
-   # external: true        # docker network create edge
