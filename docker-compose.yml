@@ -37,18 +37,18 @@ services:
     restart: always
     networks:
       - default      # auto private net
-      - edge         # shared proxy net (external)
+      #- edge         # shared proxy net (external)
     # no ports if using a reverse proxy
 
-#networks:
- # custom_net:
-  #  driver: bridge
-   # ipam:
-    #  config:
-     #   - subnet: 172.20.0.0/24
-      #    gateway: 172.20.0.1
-
-
 networks:
-  edge:
-    external: true        # docker network create edge
+  custom_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+
+
+#networks:
+  #edge:
+    #external: true        # docker network create edge
