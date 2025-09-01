@@ -3,6 +3,21 @@
 
 version: '3.8'
 
+
+mailhog:
+    image: mailhog:latest
+    container_name: mailhog
+    logging:
+      driver: 'none'
+    restart: unless-stopped
+    # Web UI on 8025, SMTP on 1025
+    ports:
+      - "1025:1025" # SMTP server for Odoo
+      - "8025:8025" # Web interface to view emails
+    networks:
+      - default
+
+
 services:
   db:
     image: postgres:17
@@ -43,18 +58,7 @@ services:
     networks:
       - default
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: mailhog
-    logging:
-      driver: 'none'
-    restart: unless-stopped
-    # Web UI on 8025, SMTP on 1025
-    ports:
-      - "1025:1025" # SMTP server for Odoo
-      - "8025:8025" # Web interface to view emails
-    networks:
-      - default
+  
 
 networks:
   default:
