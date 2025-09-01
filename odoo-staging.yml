@@ -1,24 +1,20 @@
 #odoo-staging.yml
 
-
 version: '3.8'
 
-
-mailhog:
-    image: mailhog:latest
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
     container_name: mailhog
     logging:
       driver: 'none'
     restart: unless-stopped
-    # Web UI on 8025, SMTP on 1025
     ports:
       - "1025:1025" # SMTP server for Odoo
       - "8025:8025" # Web interface to view emails
     networks:
       - default
 
-
-services:
   db:
     image: postgres:17
     user: root
@@ -57,9 +53,7 @@ services:
     restart: always
     networks:
       - default
-
   
-
 networks:
   default:
     driver: bridge
@@ -69,6 +63,7 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
+
 
 #networks:
   #edge:
