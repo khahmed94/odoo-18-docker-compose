@@ -1,6 +1,7 @@
 #odoo-staging.yml
 
-version: '2'
+
+version: '3.8'
 
 services:
   db:
@@ -13,14 +14,15 @@ services:
     restart: always
     volumes:
       - ./postgresql:/var/lib/postgresql/data
-    networks: [default]
+    networks:
+      - default
 
   odoo18:
     image: odoo:18
     user: root
     depends_on:
       - db
-      - mailhog # Add a dependency on the new MailHog service
+      - mailhog
     ports:
       - "10018:8069" # main Odoo
       - "20018:8072" # live chat
@@ -30,10 +32,9 @@ services:
       - HOST=db
       - USER=odoo
       - PASSWORD=2o0d2o4o18@2024
-      # Configure Odoo to use MailHog for email sending
-      - ODOO_SMTP_SERVER=mailhog # Hostname corresponds to the service name
-      - ODOO_SMTP_PORT=1025 # MailHog's default SMTP port
-      - ODOO_SMTP_ENCRYPTION=none # No encryption needed for local testing
+      - ODOO_SMTP_SERVER=mailhog
+      - ODOO_SMTP_PORT=1025
+      - ODOO_SMTP_ENCRYPTION=none
     volumes:
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
@@ -46,7 +47,7 @@ services:
     image: mailhog/mailhog
     container_name: mailhog
     logging:
-      driver: 'none' # Prevents log spam from MailHog
+      driver: 'none'
     restart: unless-stopped
     # Web UI on 8025, SMTP on 1025
     ports:
@@ -65,8 +66,6 @@ networks:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
 
-
 #networks:
   #edge:
    # external: true        # docker network create edge
-
