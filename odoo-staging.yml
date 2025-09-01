@@ -38,7 +38,6 @@ services:
       - "10018:8069"   # main Odoo
       - "20018:8072"   # live chat
     tty: true
-    # command: --                         # ← remove this; it breaks the default entrypoint
     environment:
       - HOST=db
       - USER=odoo
