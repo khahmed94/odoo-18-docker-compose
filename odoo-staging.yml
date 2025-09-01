@@ -44,7 +44,7 @@ services:
       - default
 
   mailhog:
-    image: mailhog/mailhog
+    image: mailhog:latest
     container_name: mailhog
     logging:
       driver: 'none'
