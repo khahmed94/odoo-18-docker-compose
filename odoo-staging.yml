@@ -31,8 +31,8 @@ services:
       - db
       - mailhog
     ports:
-      - "10018:8069"   # Odoo web
-      - "20018:8072"   # live chat
+      - "10055:8069"   # Odoo web
+      - "20055:8072"   # live chat
     tty: true
     # NOTE: do NOT set "command: --" (breaks entrypoint)
     environment:
