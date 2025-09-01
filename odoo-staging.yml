@@ -32,7 +32,7 @@ services:
     volumes:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
-      - ./entrypoint.sh:/entrypoint.sh
+      #- ./entrypoint.sh:/entrypoint.sh
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
@@ -64,16 +64,16 @@ mailhog:
 
 
 
-#networks:
- # custom_net:
-  #  driver: bridge
-   # ipam:
-    #  config:
-     #   - subnet: 172.20.0.0/24
-      #    gateway: 172.20.0.1
-
-
 networks:
-  edge:
-    external: true        # docker network create edge
+  custom_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+
+
+#networks:
+  #edge:
+   # external: true        # docker network create edge
 
