@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     # Only expose the UI locally; don't publish SMTP to host (avoids 1025 conflict)
     ports:
-      - "127.0.0.1:8025:8025"
+      - "0.0.0.0:8025:8025"
     networks:
       - default
 
