@@ -12,6 +12,9 @@ services:
     volumes:
       - ./postgresql:/var/lib/postgresql/data
     networks: [default]   # stays private
+    #networks:
+      #custom_net:
+        #ipv4_address: 172.20.0.10
 
   odoo18:
     image: odoo:18
@@ -30,7 +33,7 @@ services:
     volumes:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
-      - ./entrypoint.sh:/entrypoint.sh
+      #- ./entrypoint.sh:/entrypoint.sh
       - ./opt/shared/enterprise/18.0/odoo/addons:/mnt/enterprise
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
