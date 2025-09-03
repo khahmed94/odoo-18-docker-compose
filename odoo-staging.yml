@@ -15,21 +15,21 @@ services:
     networks:
       - default
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    restart: unless-stopped
+  #mailhog:
+   # image: mailhog/mailhog:latest
+    #restart: unless-stopped
     # Only expose the UI locally; don't publish SMTP to host (avoids 1025 conflict)
-    ports:
-      - "0.0.0.0:8025:8025"
-    networks:
-      - default
+    #ports:
+     # - "0.0.0.0:8025:8025"
+    #networks:
+     # - default
 
   odoo18:
     image: odoo:18
     user: root
     depends_on:
       - db
-      - mailhog
+      #- mailhog
     ports:
       - "10055:8069"   # Odoo web
       - "20055:8072"   # live chat
