@@ -1,0 +1,19 @@
+# odoo staging Mail Catcher 
+
+
+version: "3.8"
+
+services:
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    restart: unless-stopped
+    networks:
+      - edge    # shared proxy network
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP server
+
+networks:
+  edge:
+    external: true
