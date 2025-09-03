@@ -44,20 +44,6 @@ find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
 
-# --- Mailhog block ---
-if ! docker ps --format '{{.Names}}' | grep -q '^mailhog$'; then
-  echo "📬 Mailhog not found, starting one..."
-  docker run -d \
-    --name mailhog \
-    --network edge_net \
-    -p 8025:8025 \
-    mailhog/mailhog
-else
-  echo "✅ Mailhog already running, skipping..."
-  # Optional: if Mailhog exists but is stopped, start it
-  docker start mailhog >/dev/null 2>&1 || true
-fi
-
 
 # Run Odoo
 docker-compose -f $DESTINATION/odoo-staging.yml up -d
