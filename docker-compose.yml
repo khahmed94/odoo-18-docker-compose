@@ -40,7 +40,7 @@ services:
     restart: always
     networks:
       - default      # auto private net
-      - edge         # shared proxy net (external)
+      #- edge         # shared proxy net (external)
     # no ports if using a reverse proxy
 
 networks:
@@ -52,6 +52,6 @@ networks:
           gateway: 172.20.0.1
 
 
-networks:
-  edge:
-    external: true        # docker network create edge
+#networks:
+  #edge:
+    #external: true        # docker network create edge
