@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:17
+    user: root
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=2o0d2o4o18@2024
+      - POSTGRES_DB=postgres
+    restart: always
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    networks: [default]   # stays private
+    #networks:
+      #custom_net:
+        #ipv4_address: 172.20.0.10
+
+  odoo19:
+    image: odoo:19
+    user: root
+    depends_on:
+      - db
+    ports:
+      - "10018:8069"   # main Odoo
+      - "20018:8072"   # live chat
+    tty: true
+    command: --
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=2o0d2o4o18@2024
+    volumes:
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+      #- ./entrypoint.sh:/entrypoint.sh
+      - /opt/shared/enterprise/19.0/odoo/addons:/mnt/enterprise
+      - ./addons:/mnt/extra-addons
+      - ./etc:/etc/odoo
+    restart: always
+    networks:
+      - default      # auto private net
+      #- edge         # shared proxy net (external)
+    # no ports if using a reverse proxy
+
+networks:
+  custom_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+
+
+#networks:
+  #edge:
+    #external: true        # docker network create edge
